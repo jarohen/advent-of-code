@@ -11,18 +11,18 @@
 (defn pt1 [input]
   (->> input
        (map (fn [row]
-              (->> (sort row)
-                   ((juxt last first))
-                   (apply -))))
+              (- (apply max row) (apply min row))))
        (apply +)))
 
 (defn pt2 [input]
   (->> input
        (map (fn [row]
-              (reduce (fn [row-so-far el]
-                        (if-let [divisor (first (filter #(or (zero? (mod el %)) (zero? (mod % el))) row-so-far))]
-                          (reduced (/ (max divisor el) (min divisor el)))
-                          (conj row-so-far el)))
-                      []
-                      row)))
+              (->> (for [x row, y row]
+                     [x y])
+
+                   (keep (fn [[x y]]
+                           (when (and (not= x y) (zero? (mod x y)))
+                             (/ x y))))
+
+                   first)))
        (apply +)))
