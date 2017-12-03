@@ -2,15 +2,19 @@
   (:require [clojure.java.io :as io]
             [clojure.string :as s]))
 
+;; nope, this is buggy af
+
 (defn pt1 [x]
-  (let [sqrt (long (Math/sqrt (float (dec x))))
+  (let [sqrt (long (Math/sqrt (float x)))
         odd-sqrt (cond-> sqrt
-                   (even? sqrt) dec)
-        ring (/ (inc odd-sqrt) 2) ; how many rings its out from the centre
-        offset (- x (* odd-sqrt odd-sqrt)) ; its offset within the ring
-        segment (quot offset ring) ; which segment within the ring - split the segment into 9
-        segment-offset (mod offset (* segment ring)) ; our offset within the segment
-        ]
-    (+ ring (if (even? segment)
-              (- ring segment-offset)
-              segment-offset))))
+                   (even? sqrt) dec)]
+    (if (= x (* odd-sqrt odd-sqrt))
+      (dec odd-sqrt)
+
+      (let [ring (/ (inc odd-sqrt) 2)
+            offset (- x (* odd-sqrt odd-sqrt))
+            segment (quot offset ring)
+            segment-offset (mod offset (* segment ring))]
+        (+ ring (if (even? segment)
+                  (- ring segment-offset)
+                  segment-offset))))))
