@@ -10,13 +10,11 @@
 (defn maze [input f]
   (let [len (count input)]
     (letfn [(pt1* [input idx]
-              (lazy-seq
-                (let [n (get input idx)
-                      new-idx (+ idx n)
-                      new-vec (update input idx f)]
+              (when (<= 0 idx (dec len))
+                (lazy-seq
                   (cons input
-                        (when (and (not (neg? new-idx)) (< new-idx len))
-                          (pt1* new-vec new-idx))))))]
+                        (pt1* (update input idx f)
+                              (+ idx (get input idx)))))))]
       (count (pt1* (vec input) 0)))))
 
 (defn pt1 [input]
