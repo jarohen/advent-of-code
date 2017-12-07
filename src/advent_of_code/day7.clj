@@ -27,6 +27,8 @@
            combined-weights {}]
       (when op
         (let [{:keys [weight above]} (get input id)]
+          ;; we have two types of 'operations' here in the work queue - one to put more the necessary recursive calls in the queue, the other to process the results
+          ;; this allows us to write tree-recursive algos in a tail-call-optimised way, and still allows us to make calculations 'after' the tail calls
           (case op
             :expand (recur (concat (for [el above]
                                      [:expand el])
