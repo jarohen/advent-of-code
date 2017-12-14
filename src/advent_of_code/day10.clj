@@ -49,8 +49,10 @@
 (defn ->hex [bytes]
   (->> bytes (map #(format "%02x" %)) s/join))
 
-(defn pt2 [input]
+(defn knot-hash [input]
   (-> (map byte input)
       (sparse-hash {:knot-size 256, :rounds 64})
-      sparse->dense
-      ->hex))
+      sparse->dense))
+
+(defn p2 [input]
+  (->hex (knot-hash input)))
