@@ -11,14 +11,17 @@
 
 (def fake-input {0 3, 1 2, 4 4, 6 4})
 
-(defn caught-cols [{:keys [firewall]}]
+(defn caught-cols [{:keys [delay firewall]}]
   (into #{}
         (filter (fn [col]
                   (when-let [depth (get firewall col)]
-                    (zero? (mod col (* 2 (dec depth)))))))
-        (range (inc (apply max (keys firewall))))))
+                    (zero? (mod (+ col delay) (* 2 (dec depth)))))))
+        (keys firewall)))
 
 (defn p1 [firewall]
   (transduce (map #(* % (get firewall %)))
              +
-             (caught-cols {:firewall firewall})))
+             (caught-cols {:delay 0, :firewall firewall})))
+
+(defn p2 [firewall]
+  (first (filter (comp empty? #(caught-cols {:delay %, :firewall firewall})) (range))))
