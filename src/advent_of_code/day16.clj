@@ -18,29 +18,32 @@
 (def start
   (mapv str "abcdefghijklmnop"))
 
-(defn move-fn [{:keys [move-type cnt swap]}]
+(defn apply-move [dancers {:keys [move-type cnt swap]}]
   (case move-type
     :spin (let [dancer-count (count start)
                 pivot (- dancer-count cnt)]
-            (fn [dancers]
-              (into (subvec dancers pivot dancer-count) (subvec dancers 0 pivot))))
+            (into (subvec dancers pivot dancer-count) (subvec dancers 0 pivot)))
 
     :exchange (let [[x1 x2] (seq swap)]
-                (fn [dancers]
-                  (-> dancers
-                      (assoc x1 (nth dancers x2))
-                      (assoc x2 (nth dancers x1)))))
+                (-> dancers
+                    (assoc x1 (nth dancers x2))
+                    (assoc x2 (nth dancers x1))))
 
-    :partner (let [[d1 d2] (seq swap)
-                   swap-fn (some-fn {d1 d2, d2 d1} identity)]
-               (fn [dancers]
-                 (->> dancers
-                      (into [] (map swap-fn)))))))
+    :partner (let [[d1 d2] (seq swap)]
+               (->> dancers
+                    (into [] (map (some-fn {d1 d2, d2 d1} identity)))))))
+
+(defn apply-round [dancers moves]
+  (reduce apply-move dancers moves))
 
 (defn p1 [input]
-  (->> (reduce #(%2 %1) start (map (comp move-fn parse-move) input))
-       s/join))
+  (s/join (apply-round start (map parse-move input))))
 
 (defn p2 [input]
-  (->> (reduce #(%2 %1) start (apply concat (repeat 1e2 (map (comp move-fn parse-move) input))))
-       s/join))
+  (let [moves (map parse-move input)]
+    (loop [cur start
+           history {}]
+      (if-let [idx (get history cur)]
+        (let [inverted-history (into {} (map (fn [[k v]] [v k])) history)]
+          (s/join (get inverted-history (long (rem 1e6 (count history))))))
+        (recur (apply-round cur moves) (assoc history cur (count history)))))))
