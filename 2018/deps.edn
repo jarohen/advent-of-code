@@ -1,0 +1,2 @@
+{:paths ["src" "resources"]
+ :deps {com.socialsuperstore/arrows {:mvn/version "0.1.0"}}}
