@@ -1,5 +1,5 @@
 (ns aoc2018.day6
-  (:require [aoc2018.files :as files]
+  (:require [aoc2018.util :as util]
             [clojure.test :as t]
             [clojure.set :as set]
             [clojure.string :as str]
@@ -10,7 +10,7 @@
   (->> lines
        (map-indexed (fn [idx line]
                       (let [[x y] (->> (rest (re-matches #"(\d+), (\d+)" line))
-                                       (map files/parse-long))]
+                                       (map util/parse-long))]
                         {:idx idx, :x x, :y y})))))
 
 (defn ->grid-size [cells]
@@ -64,6 +64,6 @@
         (->region-stats (parse-lines ["1, 1" "1, 6" "8, 3" "3, 4" "5, 5" "8, 9"]) {:max-distance 32})))
 
 (comment
-  (files/with-line-seq "day6.txt"
+  (util/with-line-seq "day6.txt"
     (fn [line-strs]
       (->region-stats (parse-lines line-strs) {:max-distance 10000}))))

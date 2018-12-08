@@ -1,11 +1,11 @@
 (ns aoc2018.day1
-  (:require [aoc2018.files :as files]
+  (:require [aoc2018.util :as util]
             [clojure.java.io :as io]
             [clojure.test :as t]
             [sss.arrows :refer [->% ->>%]]))
 
 (defn with-input [f]
-  (files/with-line-seq "day1.txt" (->>% (map #(Long/parseLong %)) f)))
+  (util/with-line-seq "day1.txt" (->>% (map #(Long/parseLong %)) f)))
 
 (defn part-a [nums]
   (reduce + nums))

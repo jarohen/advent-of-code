@@ -1,13 +1,13 @@
 (ns aoc2018.day4
-  (:require [aoc2018.files :as files]
+  (:require [aoc2018.util :as util]
             [clojure.test :as t]
             [sss.arrows :refer [->%]]))
 
 (defn parse-line [line]
   (-> (zipmap [:year :month :day :hour :minute :event :guard-id]
               (rest (re-matches #"\[(\d+)-(\d+)-(\d+) (\d+):(\d+)\] (Guard #(\d+) begins shift|falls asleep|wakes up)" line)))
-      (update :minute files/parse-long)
-      (update :guard-id (->% (some-> files/parse-long)))))
+      (update :minute util/parse-long)
+      (update :guard-id (->% (some-> util/parse-long)))))
 
 (defn ->naps [evs]
   (-> (reduce (fn [{:keys [current-guard-id fell-asleep naps] :as acc} {:keys [minute event guard-id]}]
@@ -88,4 +88,4 @@
              (e2e sample)))))
 
 (comment
-  (files/with-line-seq "day4.txt" e2e))
+  (util/with-line-seq "day4.txt" e2e))

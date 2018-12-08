@@ -1,4 +1,4 @@
-(ns aoc2018.files
+(ns aoc2018.util
   (:require [clojure.java.io :as io]))
 
 (defn with-line-seq [resource f]

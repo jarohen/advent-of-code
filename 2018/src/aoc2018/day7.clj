@@ -1,5 +1,5 @@
 (ns aoc2018.day7
-  (:require [aoc2018.files :as files]
+  (:require [aoc2018.util :as util]
             [clojure.string :as str]
             [clojure.set :as set]
             [clojure.test :as t]
@@ -93,18 +93,18 @@
     (t/is (= 15 (:ticks (schedule (->nodes sample) {:worker-count 2})))))
 
   (t/is (= "ABLCFNSXZPRHVEGUYKDIMQTWJO"
-           (files/with-line-seq "day7.txt"
+           (util/with-line-seq "day7.txt"
              (->% ->nodes
                   (schedule {:worker-count 1})
                   :order)))))
 
 (comment
-  (files/with-line-seq "day7.txt"
+  (util/with-line-seq "day7.txt"
     (->% ->nodes
          (schedule {:worker-count 1})
          :order))
 
-  (files/with-line-seq "day7.txt"
+  (util/with-line-seq "day7.txt"
     (->% ->nodes
          (schedule {:worker-count 5
                     :base-cost 60})

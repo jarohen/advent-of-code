@@ -1,5 +1,5 @@
 (ns aoc2018.day2
-  (:require [aoc2018.files :as files]
+  (:require [aoc2018.util :as util]
             [clojure.test :as t]))
 
 (defn checksum [ids]
@@ -15,7 +15,7 @@
   (t/is (= 12 (checksum ["abcdef" "bababc" "abbcde" "abcccd" "aabcdd" "abcdee" "ababab"]))))
 
 (comment
-  (files/with-line-seq "day2.txt" checksum))
+  (util/with-line-seq "day2.txt" checksum))
 
 (defn different-characters [id1 id2]
   (count (filter true? (map not= id1 id2))))
@@ -34,4 +34,4 @@
            (similar ["abcde" "fghij" "klmno" "pqrst" "fguij" "axcye" "wvxyz"]))))
 
 (comment
-  (files/with-line-seq "day2.txt" similar))
+  (util/with-line-seq "day2.txt" similar))

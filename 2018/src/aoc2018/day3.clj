@@ -1,5 +1,5 @@
 (ns aoc2018.day3
-  (:require [aoc2018.files :as files]
+  (:require [aoc2018.util :as util]
             [clojure.set :as set]
             [clojure.test :as t]
             [sss.arrows :refer [->% ->>%]]))
@@ -8,7 +8,7 @@
   (for [line lines]
     (-> (zipmap [:id :x :y :width :height]
                 (->> (rest (re-matches #"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)" line))
-                     (map files/parse-long))))))
+                     (map util/parse-long))))))
 
 (defn ->squares [{:keys [id x y width height]}]
   (for [x (range x (+ x width))
@@ -50,5 +50,5 @@
     (t/is (= #{3} (p2 sample)))))
 
 (comment
-  (files/with-line-seq "day3.txt" p1)
-  (files/with-line-seq "day3.txt" p2))
+  (util/with-line-seq "day3.txt" p1)
+  (util/with-line-seq "day3.txt" p2))
