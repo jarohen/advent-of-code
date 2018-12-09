@@ -5,8 +5,7 @@
 
 (defn play-game [{:keys [player-count max-marble]}]
   (let [marbles (LinkedList. [0])]
-    (loop [idx 0
-           next-player 0
+    (loop [next-player 0
            next-marble 1
            scores {}]
 
@@ -14,29 +13,26 @@
         (> next-marble max-marble) scores
 
         (zero? (mod next-marble 23))
-        (let [remove-idx (mod (- idx 7) (count marbles))
-              removed-marble (.remove marbles (int remove-idx))]
+        (do
+          (dotimes [n 7]
+            (.add marbles 0 (.removeLast marbles)))
 
-          (recur remove-idx
-                 (mod (inc next-player) player-count)
-                 (inc next-marble)
-                 (update scores next-player (fnil + 0) next-marble removed-marble)))
+          (let [removed-marble (.removeLast marbles)]
+            (.add marbles (.removeFirst marbles))
+            (recur (mod (inc next-player) player-count)
+                   (inc next-marble)
+                   (update scores next-player (fnil + 0) next-marble removed-marble))))
 
         :else
-        (let [insert-idx (inc (mod (inc idx) (count marbles)))]
-          (.add marbles insert-idx next-marble)
-          (recur insert-idx
-                 (mod (inc next-player) player-count)
+        (do
+          (.add marbles (.removeFirst marbles))
+          (.add marbles next-marble)
+          (recur (mod (inc next-player) player-count)
                  (inc next-marble)
                  scores))))))
 
 (defn ->max-score [scores]
   (->> scores vals (apply max)))
-
-(comment
-  (time
-   (-> (play-game {:player-count 405, :max-marble 7095300})
-       ->max-score)))
 
 (t/deftest test-max-score
   (t/are [player-count max-marble max-score] (= max-score (-> (play-game {:player-count player-count,
@@ -51,4 +47,5 @@
     30 5807 37305
 
     405 70953 422980
-    ))
+
+    405 7095300 3552041936))
