@@ -1,4 +1,6 @@
 {:paths ["src" "resources"]
  :deps {com.socialsuperstore/arrows {:mvn/version "0.1.0"}
         com.stuartsierra/dependency {:mvn/version "0.2.0"}
-        traversy {:mvn/version "0.5.0"}}}
+        traversy {:mvn/version "0.5.0"}}
+
+ :jvm-opts ["-XX:-OmitStackTraceInFastThrow"]}
