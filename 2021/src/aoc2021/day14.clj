@@ -43,23 +43,15 @@ CN -> C"))))
                      acc))
            (frequencies (partition 2 1 start))))
 
-(defn pair-freqs->freqs [pair-freqs]
-  (->> pair-freqs
-       (mapcat (fn [[[h t] v]]
-                 [[h [v 0]]
-                  [t [0 v]]]))
-       (reduce (fn [acc [letter freqs]]
-                 (update acc letter (fnil #(map + %1 %2) [0 0]) freqs))
-               {})
-       (into {} (map (fn [[letter freqs]]
-                       [letter (apply max freqs)])))))
-
-(defn puzzle [n input]
+(defn puzzle [n {:keys [start] :as input}]
   (->> (nth (rules-seq input) n)
-       pair-freqs->freqs
-       (sort-by val)
+       (map (juxt (comp first key) val)) ; heads
+       (reduce (fn [acc [h freq]]
+                 (update acc h (fnil + 0) freq))
+               {(last start) 1})
+       vals
+       sort
        ((juxt last first))
-       (map val)
        (apply -)))
 
 (def p1 (partial puzzle 10))
